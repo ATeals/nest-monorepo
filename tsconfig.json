@@ -17,6 +17,13 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-    "paths": {}
+    "paths": {
+      "@modules/config": [
+        "libs/config/src"
+      ],
+      "@modules/config/*": [
+        "libs/config/src/*"
+      ]
+    }
   }
 }

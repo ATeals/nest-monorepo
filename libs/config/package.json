@@ -1,0 +1,13 @@
+{
+  "name": "@libs/config",
+  "version": "v0.0.1",
+  "description": "monorepo typesafe config lib",
+  "scripts": {},
+  "engines": {
+    "node": ">=14 <=16"
+  },
+  "dependencies": {
+    "@nestjs/config": "^3.2.3"
+  },
+  "license": "MIT"
+}

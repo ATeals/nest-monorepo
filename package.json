@@ -70,7 +70,8 @@
       "<rootDir>/libs/"
     ],
     "moduleNameMapper": {
-      "^@app/test2(|/.*)$": "<rootDir>/libs/test2/src/$1"
+      "^@app/test2(|/.*)$": "<rootDir>/libs/test2/src/$1",
+      "^@modules/config(|/.*)$": "<rootDir>/libs/config/src/$1"
     }
   }
 }

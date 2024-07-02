@@ -13,7 +13,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: "pages"
+  group: 'pages'
   cancel-in-progress: true
 
 jobs:
@@ -37,12 +37,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: "pnpm"
+          cache: 'pnpm'
 
       - name: Install dependencies
         run: pnpm install
 
       - name: Build docs
+        working-directory: ./document
         run: pnpm run docs
 
       - name: Setup Pages
@@ -51,7 +52,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
-          path: "./docs/build"
+          path: './document/build'
 
       - name: Deploy to GitHub Pages
         id: deployment

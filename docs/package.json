@@ -13,18 +13,20 @@
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
     "typecheck": "tsc",
-    "docs": "rm -rf docs && ts-node ./.scripts/index.ts && docusaurus build"
+    "docs": "rm -rf docs && tsx ./.scripts/index.ts && docusaurus build",
+    "create": "rm -rf docs && tsx ./.scripts/index.ts"
   },
   "dependencies": {
     "@docusaurus/core": "3.4.0",
     "@docusaurus/preset-classic": "3.4.0",
     "@mdx-js/react": "^3.0.0",
     "clsx": "^2.0.0",
+    "fs-extra": "^11.2.0",
+    "globby": "^11.1.0",
     "prism-react-renderer": "^2.3.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
-    "fs-extra": "^11.2.0",
-    "globby": "^11.1.0"
+    "tsx": "^4.16.0"
   },
   "devDependencies": {
     "@docusaurus/module-type-aliases": "3.4.0",

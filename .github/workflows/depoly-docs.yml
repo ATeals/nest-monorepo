@@ -43,7 +43,7 @@ jobs:
         run: pnpm install
 
       - name: Build docs
-        working-directory: document
+        working-directory: docs
         run: pnpm run docs
 
       - name: Setup Pages
@@ -52,7 +52,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2
         with:
-          path: './document/build'
+          path: './docs/build'
 
       - name: Deploy to GitHub Pages
         id: deployment

@@ -43,7 +43,7 @@ jobs:
         run: pnpm install
 
       - name: Build docs
-        working-directory: ./document
+        working-directory: document
         run: pnpm run docs
 
       - name: Setup Pages

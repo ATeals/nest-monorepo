@@ -42,3 +42,7 @@ pnpm-lock.yaml
 
 #Docker
 postgres-data
+
+
+#prisma 
+migrations

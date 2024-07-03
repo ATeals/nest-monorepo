@@ -1,0 +1,14 @@
+{
+  "name": "@libs/prisma",
+  "version": "v0.0.1",
+  "description": "monorepo prisma lib",
+  "scripts": {},
+  "engines": {
+    "node": ">=14 <=16"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.16.1",
+    "pg": "^8.11.5"
+  },
+  "license": "MIT"
+}

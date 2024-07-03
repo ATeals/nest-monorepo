@@ -1,18 +1,21 @@
-import { Global, Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-
+import { DynamicModule, Global, Module } from '@nestjs/common';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeSafeConfigService } from './config.service';
-import { config } from './config';
 
 @Global()
-@Module({
-  imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      load: [config],
-    }),
-  ],
-  providers: [TypeSafeConfigService],
-  exports: [TypeSafeConfigService],
-})
-export class TypeSafeConfigModule {}
+@Module({})
+export class TypeSafeConfigModule {
+  static forRoot(config: () => { [key: string]: any }): DynamicModule {
+    return {
+      module: TypeSafeConfigModule,
+      providers: [TypeSafeConfigService],
+      exports: [TypeSafeConfigService],
+      imports: [
+        ConfigModule.forRoot({
+          isGlobal: true,
+          load: [config],
+        }),
+      ],
+    };
+  }
+}

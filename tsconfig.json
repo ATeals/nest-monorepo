@@ -18,18 +18,12 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@modules/config": [
-        "libs/config/src"
-      ],
-      "@modules/config/*": [
-        "libs/config/src/*"
-      ],
-      "@modules/prisma": [
-        "libs/prisma/src"
-      ],
-      "@modules/prisma/*": [
-        "libs/prisma/src/*"
-      ]
+      "@modules/config": ["libs/config/src"],
+      "@modules/config/*": ["libs/config/src/*"],
+      "@modules/prisma": ["libs/prisma/src"],
+      "@modules/prisma/*": ["libs/prisma/src/*"],
+      "@modules/crud": ["libs/crud/src"],
+      "@modules/crud/*": ["libs/crud/src/*"]
     }
   }
 }

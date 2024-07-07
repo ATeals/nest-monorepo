@@ -28,7 +28,7 @@ export class CRUDFactory {
   }
 
   isEnableMethod(method: string) {
-    if (this.options.enableMethods && this.options.enableMethods.length < 1) {
+    if (!Array.isArray(this.options?.enableMethods) || this.options.enableMethods.length === 0) {
       return true;
     }
 
@@ -104,7 +104,7 @@ export class CRUDFactory {
 
     Reflect.defineMetadata(
       INTERCEPTORS_METADATA,
-      [CRUDRouteArgsInterceptor(), ...(this.options.methods?.[method]?.interceptors || [])],
+      [CRUDRouteArgsInterceptor(), ...(this.options?.methods?.[method]?.interceptors || [])],
       targetMethod,
     );
 
@@ -113,7 +113,7 @@ export class CRUDFactory {
     Reflect.defineMetadata(ROUTE_ARGS_METADATA, requestArg, this.target, methodName);
     Reflect.defineMetadata(PARAMTYPES_METADATA, [Object], this.targetPrototype, methodName);
 
-    const decorators = [...defaultDecorators, ...(this.options.methods?.[method]?.decorators || [])];
+    const decorators = [...defaultDecorators, ...(this.options?.methods?.[method]?.decorators || [])];
 
     decorators.forEach((decorator) => {
       const descriptor = Reflect.getOwnPropertyDescriptor(this.targetPrototype, methodName);

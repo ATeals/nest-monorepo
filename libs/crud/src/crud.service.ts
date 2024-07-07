@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class CrudService<T extends PrismaDelegate> {
-  constructor(private repository: PrismaRepository<T>) {}
+  constructor(protected repository: PrismaRepository<T>) {}
 
   create(data: Parameters<T['create']>[0]['data']): ReturnType<T['create']> {
     return this.repository.create({ data });

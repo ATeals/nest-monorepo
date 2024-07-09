@@ -77,7 +77,8 @@
     "moduleNameMapper": {
       "^@app/test2(|/.*)$": "<rootDir>/libs/test2/src/$1",
       "^@modules/config(|/.*)$": "<rootDir>/libs/config/src/$1",
-      "^@modules/prisma(|/.*)$": "<rootDir>/libs/prisma/src/$1"
+      "^@modules/prisma(|/.*)$": "<rootDir>/libs/prisma/src/$1",
+      "^@modules/crud(|/.*)$": "<rootDir>/libs/crud/src/$1"
     }
   }
 }

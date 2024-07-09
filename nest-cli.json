@@ -36,6 +36,15 @@
       "compilerOptions": {
         "tsConfigPath": "libs/prisma/tsconfig.lib.json"
       }
+    },
+    "crud": {
+      "type": "library",
+      "root": "libs/crud",
+      "entryFile": "index",
+      "sourceRoot": "libs/crud/src",
+      "compilerOptions": {
+        "tsConfigPath": "libs/crud/tsconfig.lib.json"
+      }
     }
   }
 }

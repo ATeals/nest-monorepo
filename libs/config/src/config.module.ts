@@ -2,10 +2,14 @@ import { DynamicModule, Global, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeSafeConfigService } from './config.service';
 
+interface DynamicModuleOptions {
+  config: () => Record<string, any>;
+  isGlobal?: boolean;
+}
 @Global()
 @Module({})
 export class TypeSafeConfigModule {
-  static forRoot(config: () => { [key: string]: any }): DynamicModule {
+  static forRoot({ config, isGlobal = true }: DynamicModuleOptions): DynamicModule {
     return {
       module: TypeSafeConfigModule,
       providers: [TypeSafeConfigService],
@@ -16,6 +20,7 @@ export class TypeSafeConfigModule {
           load: [config],
         }),
       ],
+      global: isGlobal,
     };
   }
 }

@@ -1,5 +1,5 @@
-import { CRUDFactory } from './crud.factory';
-import { Constructor, CRUDOptions } from './crud.type';
+import { CRUDFactory } from '../crud.factory';
+import { Constructor, CRUDOptions } from '../crud.type';
 
 export const CRUD =
   (options?: CRUDOptions) =>

@@ -1,5 +1,11 @@
 import { Delete, Get, Patch, Post, RequestMethod } from '@nestjs/common';
-import { METHOD_POLITYS } from './crud.type';
+import { CRUDOptions, METHOD_POLITYS } from './crud.type';
+import {
+  CreateRouteArgInterceptor,
+  CRUDRouteArgsInterceptor,
+  OnlyParamsRouteInterceptor,
+  UpdateRouteArgInterceptor,
+} from './interceptor';
 
 export const CRUD_ROUTE_ARGS = 'CRUD_ROUTE_ARGS';
 
@@ -14,32 +20,37 @@ export const METHODS = {
 export const CRUD_POLITY: METHOD_POLITYS = {
   [METHODS.READ_MANY]: {
     method: RequestMethod.GET,
-    path: '/',
+    getPath: () => '/',
     decorators: [Get()],
     hasBody: false,
+    interceptor: () => CRUDRouteArgsInterceptor(),
   },
   [METHODS.CREATE]: {
     method: RequestMethod.POST,
-    path: '/',
+    getPath: () => '/',
     decorators: [Post()],
     hasBody: true,
+    interceptor: (crudOptions: CRUDOptions) => CreateRouteArgInterceptor(crudOptions),
   },
   [METHODS.UPDATE]: {
-    method: RequestMethod.PUT,
-    path: '/:id',
+    method: RequestMethod.PATCH,
+    getPath: (parmas) => `/:${parmas}`,
     decorators: [Patch()],
     hasBody: true,
+    interceptor: (crudOptions: CRUDOptions) => UpdateRouteArgInterceptor(crudOptions),
   },
   [METHODS.DELETE]: {
     method: RequestMethod.DELETE,
-    path: '/:id',
+    getPath: (parmas) => `/:${parmas}`,
     decorators: [Delete()],
     hasBody: false,
+    interceptor: (crudOptions: CRUDOptions, primaryKey?: string) => OnlyParamsRouteInterceptor(crudOptions, primaryKey),
   },
   [METHODS.READ_ONE]: {
     method: RequestMethod.GET,
-    path: '/:id',
+    getPath: (parmas) => `/:${parmas}`,
     decorators: [Get()],
     hasBody: false,
+    interceptor: (crudOptions: CRUDOptions, primaryKey?: string) => OnlyParamsRouteInterceptor(crudOptions, primaryKey),
   },
 };

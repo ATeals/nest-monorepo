@@ -8,7 +8,7 @@ export interface CRUDOptions {
     title: string;
   };
   enableMethods?: (keyof typeof METHODS)[];
-  entity?: any;
+  entity?: new (...args: any[]) => any;
   methods?: { [P in keyof typeof METHODS]?: MethodOptions };
 }
 export interface MethodOptions {
@@ -18,9 +18,10 @@ export interface MethodOptions {
 
 export type METHOD_POLITY = {
   method: RequestMethod;
-  path: string;
+  getPath: (parmas?: string) => string;
   decorators: any[];
   hasBody?: boolean;
+  interceptor?: (...args: any) => Type<NestInterceptor>;
 };
 
 export interface METHOD_POLITYS {

@@ -1,7 +1,5 @@
-import { Request } from 'express';
 import { CRUD_POLITY, CRUD_ROUTE_ARGS, METHODS } from './constants';
 import { Constructor, CRUDOptions } from './crud.type';
-import { CRUDRouteArgsInterceptor } from './crud.interceptor';
 
 import {
   CUSTOM_ROUTE_ARGS_METADATA,
@@ -13,6 +11,8 @@ import {
 } from '@nestjs/common/constants';
 
 import { ExecutionContext } from '@nestjs/common';
+import { getMetadataStorage } from 'class-validator';
+import { DECORATORS_NAME_PRIMARYKEY } from './decorator';
 
 export class CRUDFactory {
   constructor(private target: Constructor, private options: CRUDOptions) {}
@@ -27,6 +27,15 @@ export class CRUDFactory {
     return this.target.prototype;
   }
 
+  protected get primaryKey() {
+    const metadataStorage = getMetadataStorage();
+    const targetMetadata = metadataStorage.getTargetValidationMetadatas(this.options.entity, '', false, false);
+
+    const primaryKey = targetMetadata.find((metadata) => metadata.name === DECORATORS_NAME_PRIMARYKEY).propertyName;
+
+    return primaryKey;
+  }
+
   isEnableMethod(method: string) {
     if (!Array.isArray(this.options?.enableMethods) || this.options.enableMethods.length === 0) {
       return true;
@@ -36,46 +45,37 @@ export class CRUDFactory {
   }
 
   protected [METHODS.CREATE](name: string) {
-    this.targetPrototype[name] = function (req: Request) {
-      const { body } = req;
-
+    this.targetPrototype[name] = function (body: any) {
       return this.service.create({ data: { ...body } });
     };
   }
 
   protected [METHODS.UPDATE](name: string) {
-    this.targetPrototype[name] = function (req: Request) {
-      const {
-        params: { id },
-        body,
-      } = req;
+    const primarykey = this.primaryKey;
 
-      return this.service.update({ where: { id }, data: { ...body } });
+    this.targetPrototype[name] = function (body: any) {
+      return this.service.update({ where: { [primarykey]: body[primarykey] }, data: { ...body } });
     };
   }
 
   protected [METHODS.DELETE](name: string) {
-    this.targetPrototype[name] = function (req: Request) {
-      const {
-        params: { id },
-      } = req;
+    const primarykey = this.primaryKey;
 
-      return this.service.delete({ where: { id } });
+    this.targetPrototype[name] = function (body: any) {
+      return this.service.delete({ where: { [primarykey]: body[primarykey] } });
     };
   }
 
   protected [METHODS.READ_ONE](name: string) {
-    this.targetPrototype[name] = function (req: Request) {
-      const {
-        params: { id },
-      } = req;
+    const primarykey = this.primaryKey;
 
-      return this.service.findUnique({ where: { id: Number(id) } });
+    this.targetPrototype[name] = function (body: any) {
+      return this.service.findUnique({ where: { [primarykey]: body[primarykey] } });
     };
   }
 
   protected [METHODS.READ_MANY](name: string) {
-    this.targetPrototype[name] = function (req: Request) {
+    this.targetPrototype[name] = function () {
       return this.service.findMany({});
     };
   }
@@ -93,7 +93,12 @@ export class CRUDFactory {
   // }
 
   createMethod(method: string) {
-    const { method: httpMethod, path, decorators: defaultDecorators } = CRUD_POLITY[method];
+    const {
+      method: httpMethod,
+      getPath,
+      decorators: defaultDecorators,
+      interceptor: defaultInterceptor,
+    } = CRUD_POLITY[method as keyof typeof METHODS];
 
     const methodName = this.getMethodName(method);
     const targetMethod = this.targetPrototype[methodName];
@@ -104,7 +109,7 @@ export class CRUDFactory {
 
     Reflect.defineMetadata(
       INTERCEPTORS_METADATA,
-      [CRUDRouteArgsInterceptor(), ...(this.options?.methods?.[method]?.interceptors || [])],
+      [defaultInterceptor(this.options, this.primaryKey), ...(this.options?.methods?.[method]?.interceptors || [])],
       targetMethod,
     );
 
@@ -121,7 +126,9 @@ export class CRUDFactory {
       decorator(this.targetPrototype, methodName, descriptor);
     });
 
-    Reflect.defineMetadata(PATH_METADATA, path, targetMethod);
+    const params = this.primaryKey;
+
+    Reflect.defineMetadata(PATH_METADATA, getPath(params), targetMethod);
 
     Reflect.defineMetadata(METHOD_METADATA, httpMethod, targetMethod);
   }

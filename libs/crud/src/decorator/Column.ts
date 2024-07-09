@@ -7,7 +7,7 @@ export interface ColumnOptions {
   transFormFn?: (params: TransformFnParams) => void;
   decorators?: Array<PropertyDecorator | MethodDecorator>;
   isPrimaryKey?: boolean;
-  hasDefalut?: boolean;
+  hasDefault?: boolean;
 }
 
 export const Column = (columnOptions?: ColumnOptions) => {
@@ -15,7 +15,7 @@ export const Column = (columnOptions?: ColumnOptions) => {
 
   if (columnOptions?.transFormFn) decorators.push(Transform(columnOptions.transFormFn));
   if (columnOptions?.isPrimaryKey) decorators.push(PrimaryKey());
-  if (columnOptions?.hasDefalut) decorators.push(HasDefault());
+  if (columnOptions?.hasDefault) decorators.push(HasDefault());
 
   return applyDecorators(...decorators);
 };

@@ -28,6 +28,26 @@ export class TodoController {
 
 `@CRUD()` 데코레이터를 적용한 contoroller는 해당 Entity의 Repository class인 `service`를 주입받아야 합니다. (! 이때 해당 프로퍼티의 이름은 꼭 `service`이어야 합니다.)
 
+`@CRUD()` 데코레이터의 옵션은 다음과 같습니다.
+
+```ts
+export interface CRUDOptions {
+  // enableMethods 제공시 enableMethods에 포함된 메서드만 생성됩니다.
+  enableMethods?: (keyof typeof METHODS)[];
+  // 해당 controller에서 제공할 Entity 입니다.
+  entity?: new (...args: any[]) => any;
+  // 메서드를 확장 가능합니다.
+  methods?: { [P in keyof typeof METHODS]?: MethodOptions };
+}
+
+export interface MethodOptions {
+  // 메서드에 데코레이터를 추가합니다.
+  decorators?: Array<PropertyDecorator | MethodDecorator>;
+  // 메서드에 인터셉터를 추가합니다.
+  interceptors?: Array<Type<NestInterceptor>>;
+}
+```
+
 ## Entity 데코레이터
 
 Prisma는 다른 ORM들과 다르게 class가 아닌 Object 리터럴로 관리합니다. 따라서 class Entity를 위한 여러 데코레이터를 제공합니다. 이를 통해 dto의 자동 생성, 검증, 변환이 가능합니다.

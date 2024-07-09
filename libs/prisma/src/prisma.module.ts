@@ -1,6 +1,8 @@
 import { Global, Module, DynamicModule } from '@nestjs/common';
 import { PrismaService } from './prisma.service';
 import { PrismaRepository } from './prisma.repository';
+import { PrismaModuleForRootOptions } from './interface';
+import { PRISMA_SERVICE } from './constant';
 
 @Global()
 @Module({
@@ -8,17 +10,18 @@ import { PrismaRepository } from './prisma.repository';
   exports: [PrismaService, PrismaRepository],
 })
 export class PrismaModule {
-  static forRoot({ service }: { service: new () => PrismaService }): DynamicModule {
+  static forRoot({ service, global = true }: PrismaModuleForRootOptions): DynamicModule {
     return {
       module: PrismaModule,
       providers: [
         {
-          provide: PrismaService,
+          provide: PRISMA_SERVICE,
           useValue: new service(),
         },
         PrismaRepository,
       ],
-      exports: [PrismaService, PrismaRepository],
+      exports: [PRISMA_SERVICE, PrismaRepository],
+      global,
     };
   }
 }

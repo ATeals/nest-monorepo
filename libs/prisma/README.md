@@ -44,15 +44,17 @@ export class MainModule {}
 
 Prisma를 RepositoryLayer를 통해 사용하고 싶다면 PrismaRepository를 extends하는 해당 모델의 repository를 선언합니다.
 
+`@Inject(PRISMA_SERVICE)` 데코레이터를 사용해 서비스를 주입합니다.
+
 ```ts
-import { PrismaRepository } from '@/common/prisma/prisma.repository';
-import { PrismaService } from '@/common/prisma/prisma.service';
+import { PRISMA_SERVICE, PrismaRepository } from '@modules/prisma';
+import { PrismaService } from './PrismaService';
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class UserRepository extends PrismaRepository<Prisma.UserDelegate> {
-  constructor(private readonly prisma: PrismaService) {
+  constructor(@Inject(PRISMA_SERVICE) private readonly prisma: PrismaService) {
     super(prisma.user);
   }
 }

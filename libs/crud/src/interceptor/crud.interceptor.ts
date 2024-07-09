@@ -3,23 +3,7 @@ import { Request } from 'express';
 import { CRUD_ROUTE_ARGS } from '../constants';
 
 export function CRUDRouteArgsInterceptor() {
-  class MixinInterceptor implements NestInterceptor {
-    async intercept(context: ExecutionContext, next: CallHandler<any>) {
-      const req = context.switchToHttp().getRequest<Request>();
-
-      const body = { ...req?.body, ...req?.query };
-
-      req[CRUD_ROUTE_ARGS] = await this.validateBody(body);
-
-      return next.handle();
-    }
-
-    async validateBody(body: object) {
-      return body;
-    }
-  }
-
-  return mixin(MixinInterceptor);
+  return mixin(CRUDInterceptor);
 }
 export class CRUDInterceptor implements NestInterceptor {
   async intercept(context: ExecutionContext, next: CallHandler<any>) {

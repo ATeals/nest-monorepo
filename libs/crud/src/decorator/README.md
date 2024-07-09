@@ -119,5 +119,7 @@ export interface ColumnOptions {
   isPrimaryKey?: boolean;
   // @HasDefault()를 선언합니다.
   hasDefalut?: boolean;
+  // @Type() 데코레이터를 사용합니다.
+  type?: (type?: TypeHelpOptions) => AnyFunction;
 }
 ```

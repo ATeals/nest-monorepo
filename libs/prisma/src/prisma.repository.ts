@@ -12,8 +12,12 @@ export interface PrismaDelegate {
   upsert(data: any): any;
 }
 
+type Constructor = new (...args: any[]) => any;
+
 export class PrismaRepository<D extends PrismaDelegate> implements PrismaDelegate {
-  constructor(protected delegate: D, protected entity?: new (data: any) => any) {
+  protected runner: D | null = null;
+
+  constructor(protected delegate: D, protected entity?: Constructor) {
     return new Proxy(this, {
       get: function (target, prop) {
         const origMethod = target[prop];
@@ -24,6 +28,7 @@ export class PrismaRepository<D extends PrismaDelegate> implements PrismaDelegat
 
         return async function (...args) {
           const result = await origMethod.apply(target, args);
+
           return target.responseSerializer(result);
         };
       },
@@ -42,47 +47,47 @@ export class PrismaRepository<D extends PrismaDelegate> implements PrismaDelegat
     return this.delegate;
   }
 
-  aggregate(data: Parameters<D['aggregate']>[0]): ReturnType<D['aggregate']> {
-    return this.getDelegate().aggregate(data);
+  aggregate(data: Parameters<D['aggregate']>[0], runner?: D): ReturnType<D['aggregate']> {
+    return (runner || this.getDelegate()).aggregate(data);
   }
 
-  count(data: Parameters<D['count']>[0]): ReturnType<D['count']> {
-    return this.getDelegate().count(data);
+  count(data: Parameters<D['count']>[0], runner?: D): ReturnType<D['count']> {
+    return (runner || this.getDelegate()).count(data);
   }
 
-  create(data: Parameters<D['create']>[0]): ReturnType<D['create']> {
-    return this.getDelegate().create(data);
+  create(data: Parameters<D['create']>[0], runner?: D): ReturnType<D['create']> {
+    return (runner || this.getDelegate()).create(data);
   }
 
-  delete(data: Parameters<D['delete']>[0]): ReturnType<D['delete']> {
-    return this.getDelegate().delete(data);
+  delete(data: Parameters<D['delete']>[0], runner?: D): ReturnType<D['delete']> {
+    return (runner || this.getDelegate()).delete(data);
   }
 
-  deleteMany(data: Parameters<D['deleteMany']>[0]): ReturnType<D['deleteMany']> {
-    return this.getDelegate().deleteMany(data);
+  deleteMany(data: Parameters<D['deleteMany']>[0], runner?: D): ReturnType<D['deleteMany']> {
+    return (runner || this.getDelegate()).deleteMany(data);
   }
 
-  findFirst(data: Parameters<D['findFirst']>[0]): ReturnType<D['findFirst']> {
-    return this.getDelegate().findFirst(data);
+  findFirst(data: Parameters<D['findFirst']>[0], runner?: D): ReturnType<D['findFirst']> {
+    return (runner || this.getDelegate()).findFirst(data);
   }
 
-  async findMany(data: Parameters<D['findMany']>[0]): Promise<ReturnType<D['findMany']>> {
-    return await this.getDelegate().findMany(data);
+  async findMany(data: Parameters<D['findMany']>[0], runner?: D): Promise<ReturnType<D['findMany']>> {
+    return await (runner || this.getDelegate()).findMany(data);
   }
 
-  findUnique(data: Parameters<D['findUnique']>[0]): ReturnType<D['findUnique']> {
-    return this.getDelegate().findUnique(data);
+  findUnique(data: Parameters<D['findUnique']>[0], runner?: D): ReturnType<D['findUnique']> {
+    return (runner || this.getDelegate()).findUnique(data);
   }
 
-  update(data: Parameters<D['update']>[0]): ReturnType<D['update']> {
-    return this.getDelegate().update(data);
+  update(data: Parameters<D['update']>[0], runner?: D): ReturnType<D['update']> {
+    return (runner || this.getDelegate()).update(data);
   }
 
-  updateMany(data: Parameters<D['updateMany']>[0]): ReturnType<D['updateMany']> {
-    return this.getDelegate().updateMany(data);
+  updateMany(data: Parameters<D['updateMany']>[0], runner?: D): ReturnType<D['updateMany']> {
+    return (runner || this.getDelegate()).updateMany(data);
   }
 
-  upsert(data: Parameters<D['upsert']>[0]): ReturnType<D['upsert']> {
-    return this.getDelegate().upsert(data);
+  upsert(data: Parameters<D['upsert']>[0], runner?: D): ReturnType<D['upsert']> {
+    return (runner || this.getDelegate()).upsert(data);
   }
 }
